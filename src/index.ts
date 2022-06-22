@@ -8,10 +8,16 @@ const main = async () => {
   // populate the variables
   config();
 
+  console.log("Received values: ");
+  console.log(
+    `DB_NAME: ${process.env.DB_NAME}\nDB_USERNAME: ${process.env.DB_USERNAME}\nDB_PORT: ${process.env.DB_PORT}\nDB_PASSWORD: ${process.env.DB_PASSWORD}\nDB_HOST: ${process.env.DB_HOST}`
+  );
+
   const conn = new DataSource({
     database: process.env.DB_NAME,
     username: process.env.DB_USERNAME,
-    port: +(process.env.DB_PORT || 5432),
+    port: process.env.DB_PORT ? +process.env.DB_PORT : 5432,
+    host: process.env.DB_HOST || "localhost",
     password: process.env.DB_PASSWORD,
     type: "postgres",
     entities: [RandomNumbers],

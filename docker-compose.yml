@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  app:
+    image: app:0.1
+    ports:
+      - 5000:5000
+    environment:
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+    depends_on:
+      postgres:
+        condition: service_started
+  # the database itself
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USERNAME}
+    volumes:
+      - postgres-vol:/var/lib/postgresql/data
+  # admin page
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+    depends_on:
+      postgres:
+        condition: service_started
+volumes:
+  postgres-vol:
+    driver: local
